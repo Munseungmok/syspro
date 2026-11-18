@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     struct student record;
     struct flock lock;
 
-    if (argc < 2) {                        /* 예외처리: 인자 부족 */
+    if (argc < 2) {                           /* 예외처리 : 인자 부족 */
         fprintf(stderr, "How to use : %s file\n", argv[0]);
         exit(1);
     }
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
     printf("\nEnter StudentID to search : ");
     while (scanf("%d", &id) == 1) {
-        lock.l_type = F_RDLCK;             /* 읽기 잠금 */
+        lock.l_type = F_RDLCK;                /* 읽기 잠금 */
         lock.l_whence = SEEK_SET;
         lock.l_start = (id - START_ID) * sizeof(record);
         lock.l_len = sizeof(record);
@@ -32,11 +32,12 @@ int main(int argc, char *argv[]) {
 
         lseek(fd, (long)(id - START_ID) * sizeof(record), SEEK_SET);
         if (read(fd, &record, sizeof(record)) > 0 && record.id != 0)
-            printf("Name:%s\t StuID:%d\t Score:%d\n", record.name, record.id, record.score);
+            printf("Name:%s\t StuID:%d\t Score:%d\n",
+                   record.name, record.id, record.score);
         else
             printf("No record %d \n", id);
 
-        lock.l_type = F_UNLCK;             /* 잠금 해제 */
+        lock.l_type = F_UNLCK;                /* 잠금 해제 */
         fcntl(fd, F_SETLK, &lock);
 
         printf("\nEnter StudentID to search : ");
